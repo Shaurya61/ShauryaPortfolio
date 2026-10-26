@@ -1,65 +1,72 @@
 "use client";
 
 import React from "react";
-import { motion } from "framer-motion";
 import { links } from "@/lib/data";
 import Link from "next/link";
 import clsx from "clsx";
+import { BsMoon, BsSun } from "react-icons/bs";
 import { useActiveSectionContext } from "@/context/active-section-context";
+import { useTheme } from "@/context/theme-context";
 
 export default function Header() {
   const { activeSection, setActiveSection, setTimeOfLastClick } =
     useActiveSectionContext();
+  const { theme, toggleTheme } = useTheme();
+
+  const goTo = (name: (typeof links)[number]["name"]) => {
+    setActiveSection(name);
+    setTimeOfLastClick(Date.now());
+  };
 
   return (
-    <header className="z-[999] relative">
-      <motion.div
-        className="fixed top-0 left-1/2 h-[4.5rem] w-full rounded-none border border-white border-opacity-40 bg-white bg-opacity-80 shadow-lg shadow-black/[0.03] backdrop-blur-[0.5rem] sm:top-6 sm:h-[3.25rem] sm:w-[36rem] sm:rounded-full dark:bg-gray-950 dark:border-black/40 dark:bg-opacity-75"
-        initial={{ y: -100, x: "-50%", opacity: 0 }}
-        animate={{ y: 0, x: "-50%", opacity: 1 }}
-      ></motion.div>
+    <header className="sticky top-0 z-50 border-b border-rule/80 bg-bg/80 backdrop-blur-md">
+      <div className="mx-auto flex h-14 max-w-page items-center justify-between gap-4 px-4 sm:px-8">
+        <Link
+          href="#home"
+          className="flex items-center gap-2.5 font-bold"
+          onClick={() => goTo("Home")}
+        >
+          <span
+            aria-hidden
+            className="h-3.5 w-3.5 rounded-full border-[3px] border-zfunds"
+          />
+          <span className="sm:hidden">SN</span>
+          <span className="hidden sm:inline">Shaurya Nayyar</span>
+        </Link>
 
-      <nav className="flex fixed top-[0.15rem] left-1/2 h-12 -translate-x-1/2 py-2 sm:top-[1.7rem] sm:h-[initial] sm:py-0">
-        <ul className="flex w-[22rem] flex-wrap items-center justify-center gap-y-1 text-[0.9rem] font-medium text-gray-500 sm:w-[initial] sm:flex-nowrap sm:gap-5">
-          {links.map((link) => (
-            <motion.li
-              className="h-3/4 flex items-center justify-center relative"
-              key={link.hash}
-              initial={{ y: -100, opacity: 0 }}
-              animate={{ y: 0, opacity: 1 }}
-            >
-              <Link
-                className={clsx(
-                  "flex w-full items-center justify-center px-3 py-3 hover:text-gray-950 transition dark:text-gray-500 dark:hover:text-gray-300",
-                  {
-                    "text-gray-950 dark:text-gray-200":
-                      activeSection === link.name,
-                  }
-                )}
-                href={link.hash}
-                onClick={() => {
-                  setActiveSection(link.name);
-                  setTimeOfLastClick(Date.now());
-                }}
-              >
-                {link.name}
+        <nav className="flex items-center gap-1 sm:gap-3">
+          <ul className="flex items-center text-[0.9rem] font-medium">
+            {links
+              .filter((link) => link.name !== "Home")
+              .map((link) => (
+                <li key={link.hash}>
+                  <Link
+                    href={link.hash}
+                    aria-current={activeSection === link.name ? "true" : undefined}
+                    className={clsx(
+                      "block px-2 py-2 underline-offset-[6px] transition-colors hover:text-ink sm:px-3",
+                      activeSection === link.name
+                        ? "text-ink underline decoration-sayso decoration-2"
+                        : "text-muted"
+                    )}
+                    onClick={() => goTo(link.name)}
+                  >
+                    {link.name}
+                  </Link>
+                </li>
+              ))}
+          </ul>
 
-                {link.name === activeSection && (
-                  <motion.span
-                    className="bg-gray-100 rounded-full absolute inset-0 -z-10 dark:bg-gray-800"
-                    layoutId="activeSection"
-                    transition={{
-                      type: "spring",
-                      stiffness: 380,
-                      damping: 30,
-                    }}
-                  ></motion.span>
-                )}
-              </Link>
-            </motion.li>
-          ))}
-        </ul>
-      </nav>
+          <button
+            type="button"
+            onClick={toggleTheme}
+            aria-label={theme === "light" ? "Switch to dark theme" : "Switch to light theme"}
+            className="flex h-9 w-9 items-center justify-center rounded-full text-muted transition-colors hover:bg-ink/10 hover:text-ink"
+          >
+            {theme === "light" ? <BsMoon /> : <BsSun />}
+          </button>
+        </nav>
+      </div>
     </header>
   );
 }

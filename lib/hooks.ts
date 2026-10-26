@@ -3,9 +3,11 @@ import { useEffect } from "react";
 import { useInView } from "react-intersection-observer";
 import type { SectionName } from "./types";
 
-export function useSectionInView(sectionName: SectionName, threshold = 0.75) {
+// A section is active while it crosses the middle of the viewport, which
+// works for sections taller than the screen too.
+export function useSectionInView(sectionName: SectionName) {
   const { ref, inView } = useInView({
-    threshold,
+    rootMargin: "-45% 0px -50% 0px",
   });
   const { setActiveSection, timeOfLastClick } = useActiveSectionContext();
 

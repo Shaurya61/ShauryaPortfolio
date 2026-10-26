@@ -2,51 +2,45 @@
 
 import React from "react";
 import SectionHeading from "./section-heading";
-import { skillsData } from "@/lib/data";
+import { education, skillsData } from "@/lib/data";
 import { useSectionInView } from "@/lib/hooks";
-import { motion } from "framer-motion";
-
-const fadeInAnimationVariants = {
-  initial: {
-    opacity: 0,
-    y: 100,
-  },
-  animate: (index: number) => ({
-    opacity: 1,
-    y: 0,
-    transition: {
-      delay: 0.05 * index,
-    },
-  }),
-};
 
 export default function Skills() {
   const { ref } = useSectionInView("Skills");
 
   return (
-    <section
-      id="skills"
-      ref={ref}
-      className="mb-28 max-w-[53rem] scroll-mt-28 text-center sm:mb-40"
-    >
-      <SectionHeading>My skills</SectionHeading>
-      <ul className="flex flex-wrap justify-center gap-2 text-lg text-gray-800">
-        {skillsData.map((skill, index) => (
-          <motion.li
-            className="bg-white borderBlack rounded-xl px-5 py-3 dark:bg-white/10 dark:text-white/80"
-            key={index}
-            variants={fadeInAnimationVariants}
-            initial="initial"
-            whileInView="animate"
-            viewport={{
-              once: true,
-            }}
-            custom={index}
-          >
-            {skill}
-          </motion.li>
+    <section id="skills" ref={ref} className="scroll-mt-20 py-20 sm:py-28">
+      <SectionHeading>Skills</SectionHeading>
+
+      <dl className="grid gap-x-10 gap-y-10 sm:grid-cols-2 lg:grid-cols-3">
+        {skillsData.map((skill) => (
+          <div key={skill.group}>
+            <dt className="border-b border-rule pb-2 font-semibold">{skill.group}</dt>
+            <dd>
+              <ul className="mt-3 flex flex-wrap gap-2">
+                {skill.items.map((item) => (
+                  <li
+                    key={item}
+                    className="rounded-md border border-rule bg-surface px-2.5 py-1 text-[0.95rem]"
+                  >
+                    {item}
+                  </li>
+                ))}
+              </ul>
+            </dd>
+          </div>
         ))}
-      </ul>
+
+        <div>
+          <dt className="border-b border-rule pb-2 font-semibold">Education</dt>
+          <dd className="mt-3">
+            <p>{education.degree}</p>
+            <p className="mt-1 text-muted">
+              {education.school}, {education.date}
+            </p>
+          </dd>
+        </div>
+      </dl>
     </section>
   );
 }

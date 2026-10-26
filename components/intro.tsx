@@ -1,110 +1,64 @@
 "use client";
 
-import Image from "next/image";
 import React from "react";
-import { motion } from "framer-motion";
-import Link from "next/link";
-import { BsArrowRight, BsLinkedin } from "react-icons/bs";
 import { HiDownload } from "react-icons/hi";
-import { FaGithubSquare } from "react-icons/fa";
 import { useSectionInView } from "@/lib/hooks";
-import { useActiveSectionContext } from "@/context/active-section-context";
+import CommitGraph from "./commit-graph";
 
-export default function Intro() {
-  const { ref } = useSectionInView("Home", 0.5);
-  const { setActiveSection, setTimeOfLastClick } = useActiveSectionContext();
+export default function Intro({ today }: { today: string }) {
+  const { ref } = useSectionInView("Home");
 
   return (
-    <section
-      ref={ref}
-      id="home"
-      className="mb-28 max-w-[100rem] text-center sm:mb-0 scroll-mt-[100rem]"
-    >
-      <div className="flex flex-col md:flex-row items-center justify-center max-w-full gap-16 px-4">
-        {/* Image */}
-        <div className="w-full md:w-1/2 flex justify-center mb-6 md:mb-0">
-          <Image
-            src="/profile9.png"
-            alt="profile photo"
-            width={450}
-            height={425}
-            quality={100}
-            priority
-            className={`
-              object-cover w-full h-auto
-              max-w-xs sm:max-w-sm md:max-w-md
-              [filter:drop-shadow(2px_0_0_#fff)_drop-shadow(-2px_0_0_#fff)_drop-shadow(0_2px_0_#fff)_drop-shadow(0_-2px_0_0_#fff)]
-              dark:[filter:drop-shadow(2px_0_0_#075985)_drop-shadow(-2px_0_0_#075985)_drop-shadow(0_2px_0_#075985)_drop-shadow(0_-2px_0_#075985)]
-            `}
-          />
-        </div>
+    <section ref={ref} id="home" className="scroll-mt-20 pb-20 pt-14 sm:pb-28 sm:pt-20">
+      <h1 className="display text-[clamp(3rem,10.5vw,8.75rem)] font-extrabold leading-[0.88]">
+        Shaurya
+        <br />
+        <span className="ml-[0.6em] inline-block">Nayyar</span>
+      </h1>
 
-        {/* Text & Actions */}
-        <div className="w-full md:w-1/2 max-w-[60rem]">
-          <motion.h1
-            className="mb-10 mt-4 px-4 text-2xl font-medium !leading-[1.5] sm:text-4xl"
-            initial={{ opacity: 0, y: 100 }}
-            animate={{ opacity: 1, y: 0 }}
+      <div className="mt-10 flex flex-wrap items-end justify-between gap-x-12 gap-y-8">
+        <p className="max-w-[38rem] text-lg leading-relaxed text-muted sm:text-xl">
+          <span className="font-semibold text-ink">Full-stack engineer in New Delhi.</span>{" "}
+          I build products end to end, from APIs and build pipelines to fast
+          frontends and AI features. Below is the whole history, as a commit
+          graph.
+        </p>
+
+        <div className="flex flex-wrap items-center gap-3 font-medium">
+          <a
+            href="mailto:shauryanayyar.dev@gmail.com"
+            className="rounded-full bg-ink px-6 py-3 text-bg transition-transform hover:-translate-y-0.5"
           >
-            <span className="font-bold">Hello, I'm Shaurya.</span> I'm a{" "}
-            <span className="font-bold">full-stack developer</span> with{" "}
-            <span className="font-bold">1 year</span> of experience. I enjoy
-            building <span className="italic">sites & apps</span>. My focus is{" "}
-            <span className="underline">
-              Building Scalable and optimized sites.
-            </span>
-            .
-          </motion.h1>
-
-          <motion.div
-            className="flex flex-col sm:flex-row items-center justify-center gap-8 px-4 text-lg font-medium"
-            initial={{ opacity: 0, y: 100 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.1 }}
+            Email me
+          </a>
+          <a
+            href="/Shaurya-Resume.pdf"
+            download
+            className="flex items-center gap-2 rounded-full border border-rule bg-surface px-6 py-3 transition-colors hover:border-ink"
           >
-            {/* Primary buttons */}
-            <div className="flex flex-col sm:flex-row items-center gap-4">
-              <Link
-                href="#contact"
-                className="group bg-gray-900 text-white px-7 py-3 flex items-center gap-2 rounded-full outline-none focus:scale-110 hover:scale-110 hover:bg-gray-950 active:scale-105 transition"
-                onClick={() => {
-                  setActiveSection("Contact");
-                  setTimeOfLastClick(Date.now());
-                }}
-              >
-                Contact me here{" "}
-                <BsArrowRight className="opacity-70 group-hover:translate-x-1 transition" />
-              </Link>
-
-              <a
-                className="group bg-white px-7 py-3 flex items-center gap-2 rounded-full outline-none focus:scale-110 hover:scale-110 active:scale-105 transition cursor-pointer borderBlack dark:bg-white/10"
-                href="/Shaurya-Resume.pdf"
-                download
-              >
-                Download CV{" "}
-                <HiDownload className="opacity-60 group-hover:translate-y-1 transition" />
-              </a>
-            </div>
-
-            {/* Social icons */}
-            <div className="flex items-center gap-4">
-              <a
-                className="bg-white p-4 text-gray-700 hover:text-gray-950 flex items-center gap-2 rounded-full focus:scale-[1.15] hover:scale-[1.15] active:scale-105 transition cursor-pointer borderBlack dark:bg-white/10 dark:text-white/60"
-                href="https://www.linkedin.com/in/shaurya8555/"
-                target="_blank"
-              >
-                <BsLinkedin />
-              </a>
-              <a
-                className="bg-white p-4 text-gray-700 flex items-center gap-2 text-[1.35rem] rounded-full focus:scale-[1.15] hover:scale-[1.15] hover:text-gray-950 active:scale-105 transition cursor-pointer borderBlack dark:bg-white/10 dark:text-white/60"
-                href="https://github.com/Shaurya61"
-                target="_blank"
-              >
-                <FaGithubSquare />
-              </a>
-            </div>
-          </motion.div>
+            Resume <HiDownload aria-hidden />
+          </a>
+          <a
+            href="https://github.com/Shaurya61"
+            target="_blank"
+            rel="noreferrer"
+            className="px-2 py-3 text-muted underline-offset-4 hover:text-ink hover:underline"
+          >
+            GitHub
+          </a>
+          <a
+            href="https://www.linkedin.com/in/shaurya8555/"
+            target="_blank"
+            rel="noreferrer"
+            className="px-2 py-3 text-muted underline-offset-4 hover:text-ink hover:underline"
+          >
+            LinkedIn
+          </a>
         </div>
+      </div>
+
+      <div className="mt-14 sm:mt-16">
+        <CommitGraph today={today} />
       </div>
     </section>
   );

@@ -2,14 +2,114 @@
 @tailwind components;
 @tailwind utilities;
 
-html {
-  --line-color: #e5e7eb;
+/* Colour tokens as RGB channels so Tailwind can apply opacity.
+   Each branch colour marks one company, in the graph and in its section. */
+:root {
+  --bg: 247 246 251;
+  --surface: 255 255 255;
+  --ink: 26 22 51;
+  --muted: 92 87 122;
+  --rule: 222 219 235;
+  --main: 120 115 150;
+  --basyo: 0 135 130;
+  --redsling: 214 41 98;
+  --sayso: 105 84 230;
+  --zfunds: 186 116 0;
+  --strike: 214 48 48;
+  color-scheme: light;
 }
 
 html.dark {
-  --line-color: rgba(255, 255, 255, 0.2);
+  --bg: 20 17 39;
+  --surface: 30 26 56;
+  --ink: 237 235 246;
+  --muted: 165 160 194;
+  --rule: 48 43 82;
+  --main: 142 137 179;
+  --basyo: 61 214 208;
+  --redsling: 255 93 143;
+  --sayso: 160 146 255;
+  --zfunds: 255 182 46;
+  --strike: 255 112 112;
+  color-scheme: dark;
 }
 
-.borderBlack {
-  @apply border border-black/10;
+body {
+  background: rgb(var(--bg));
+  color: rgb(var(--ink));
+  -webkit-font-smoothing: antialiased;
+}
+
+:focus-visible {
+  outline: 2px solid currentColor;
+  outline-offset: 3px;
+  border-radius: 4px;
+}
+
+::selection {
+  background: rgb(var(--sayso) / 0.3);
+}
+
+/* Wide display cut of Mona Sans for headlines */
+.display {
+  font-stretch: 125%;
+  font-variation-settings: "wdth" 125;
+  letter-spacing: -0.035em;
+}
+
+/* Before/after value: the old figure is struck through */
+.delta-old {
+  position: relative;
+  text-decoration: none;
+  color: rgb(var(--muted));
+  white-space: nowrap;
+}
+
+.delta-old::after {
+  content: "";
+  position: absolute;
+  left: -0.08em;
+  right: -0.08em;
+  top: 54%;
+  height: max(2px, 0.08em);
+  background: rgb(var(--strike));
+}
+
+.delta-new {
+  white-space: nowrap;
+  font-weight: 700;
+}
+
+/* The one orchestrated moment: branches grow out of main on load */
+@media (prefers-reduced-motion: no-preference) {
+  .graph-branch {
+    stroke-dasharray: 1;
+    animation: draw 900ms cubic-bezier(0.55, 0, 0.25, 1) both;
+    animation-delay: calc(200ms + var(--i) * 260ms);
+  }
+
+  .graph-commit {
+    animation: pop 320ms cubic-bezier(0.3, 1.6, 0.5, 1) both;
+    animation-delay: calc(700ms + var(--i) * 260ms);
+  }
+}
+
+@keyframes draw {
+  from {
+    stroke-dashoffset: 1;
+  }
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+
+@keyframes pop {
+  from {
+    opacity: 0;
+    transform: scale(0.4);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
 }

@@ -1,18 +1,33 @@
 import Header from "@/components/header";
 import "./globals.css";
-import { Inter } from "next/font/google";
+import localFont from "next/font/local";
 import ActiveSectionContextProvider from "@/context/active-section-context";
 import Footer from "@/components/footer";
-import ThemeSwitch from "@/components/theme-switch";
 import ThemeContextProvider from "@/context/theme-context";
 import { Toaster } from "react-hot-toast";
 
-const inter = Inter({ subsets: ["latin"] });
+// Self-hosted: next/font/google in Next 13.4 can't parse current Google Fonts URLs
+const sans = localFont({
+  src: "./fonts/mona-sans-latin.woff2",
+  weight: "200 900",
+  variable: "--font-sans",
+});
+
+// Only for things that are code: branch names and commit messages
+const mono = localFont({
+  src: "./fonts/jetbrains-mono-latin-wght.woff2",
+  weight: "100 800",
+  variable: "--font-mono",
+});
 
 export const metadata = {
-  title: "Shaurya | Personal Portfolio",
-  description: "Shaurya is a full-stack developer with 1 year of experience.",
+  title: "Shaurya Nayyar, full-stack engineer",
+  description:
+    "Shaurya Nayyar is a full-stack engineer who builds products end to end, from backend systems to AI features, and the maker of Sayso.",
 };
+
+// Applies the saved or system theme before first paint to avoid a flash
+const themeScript = `try{var t=localStorage.getItem("theme");if(t==="dark"||(!t&&matchMedia("(prefers-color-scheme: dark)").matches))document.documentElement.classList.add("dark")}catch(e){}`;
 
 export default function RootLayout({
   children,
@@ -20,21 +35,18 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en" className="!scroll-smooth">
-      <body
-        className={`${inter.className} bg-gray-50 text-gray-950 relative pt-28 sm:pt-36 dark:bg-gray-900 dark:text-gray-50 dark:text-opacity-90`}
-      >
-        <div className="bg-[#D0F2FF] absolute top-[-6rem] -z-10 right-[11rem] h-[31.25rem] w-[31.25rem] rounded-full blur-[10rem] sm:w-[68.75rem] dark:bg-[#075985]" />
-        <div className="bg-[#E0FCFF] absolute top-[-1rem] -z-10 left-[-35rem] h-[31.25rem] w-[50rem] rounded-full blur-[10rem] sm:w-[68.75rem] dark:bg-[#0E3A5E]" />
-
+    <html lang="en" className="!scroll-smooth" suppressHydrationWarning>
+      <head>
+        <script dangerouslySetInnerHTML={{ __html: themeScript }} />
+      </head>
+      <body className={`${sans.variable} ${mono.variable} font-sans`}>
         <ThemeContextProvider>
           <ActiveSectionContextProvider>
             <Header />
             {children}
             <Footer />
 
-            <Toaster position="top-right" />
-            <ThemeSwitch />
+            <Toaster position="bottom-center" />
           </ActiveSectionContextProvider>
         </ThemeContextProvider>
       </body>

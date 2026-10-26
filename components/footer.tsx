@@ -2,10 +2,10 @@ import React from "react";
 
 export default function Footer() {
   return (
-    <footer className="mb-10 px-4 text-center text-gray-500">
-      <small className="mb-2 block text-xs">
-        &copy; Shaurya. All rights reserved.
-      </small>
+    <footer className="mx-auto max-w-page px-4 pb-10 sm:px-8">
+      <p className="border-t border-rule pt-6 text-sm text-muted">
+        &copy; {new Date().getFullYear()} Shaurya Nayyar
+      </p>
     </footer>
   );
 }

@@ -2,65 +2,73 @@
 
 import React from "react";
 import SectionHeading from "./section-heading";
-import {
-  VerticalTimeline,
-  VerticalTimelineElement,
-} from "react-vertical-timeline-component";
-import "react-vertical-timeline-component/style.min.css";
+import RichText from "./rich-text";
 import { experiencesData } from "@/lib/data";
 import { useSectionInView } from "@/lib/hooks";
-import { useTheme } from "@/context/theme-context";
 
 export default function Experience() {
-  const { ref } = useSectionInView("Experience");
-  const { theme } = useTheme();
+  const { ref } = useSectionInView("Work");
 
   return (
-    <section id="experience" ref={ref} className="scroll-mt-28 mb-28 sm:mb-40">
-      <SectionHeading>My experience</SectionHeading>
-      <VerticalTimeline lineColor="">
-        {experiencesData.map((item, index) => (
-          <React.Fragment key={index}>
-            <VerticalTimelineElement
-              contentStyle={{
-                background:
-                  theme === "light" ? "#f3f4f6" : "rgba(255, 255, 255, 0.05)",
-                boxShadow: "none",
-                border: "1px solid rgba(0, 0, 0, 0.05)",
-                textAlign: "left",
-                padding: "1.3rem 2rem",
-              }}
-              contentArrowStyle={{
-                borderRight:
-                  theme === "light"
-                    ? "0.4rem solid #9ca3af"
-                    : "0.4rem solid rgba(255, 255, 255, 0.5)",
-              }}
-              date={item.date}
-              icon={item.icon}
-              iconStyle={{
-                background:
-                  theme === "light" ? "white" : "rgba(255, 255, 255, 0.15)",
-                fontSize: "1.5rem",
-              }}
+    <section id="work" ref={ref} className="scroll-mt-20 py-20 sm:py-28">
+      <SectionHeading note="Three companies, each its own branch. The colours match the graph above.">
+        Work
+      </SectionHeading>
+
+      <ol className="space-y-6">
+        {experiencesData.map((job) => {
+          const color = `rgb(var(--${job.branch}))`;
+          return (
+            <li
+              key={job.company}
+              className="grid gap-8 rounded-3xl border border-rule bg-surface p-6 sm:p-10 lg:grid-cols-[18rem_1fr] lg:gap-14"
             >
-              <h3 className="font-semibold capitalize">{item.title}</h3>
-              <p className="font-normal !mt-0">{item.location}</p>
-              {Array.isArray(item.description) ? (
-                <ul className="!mt-1 !font-normal text-gray-700 dark:text-white/75 list-disc pl-5">
-                  {item.description.map((desc, idx) => (
-                    <li key={idx}>{desc}</li>
-                  ))}
-                </ul>
-              ) : (
-                <p className="!mt-1 !font-normal text-gray-700 dark:text-white/75">
-                  {item.description}
+              <div className="lg:sticky lg:top-24 lg:self-start">
+                <span
+                  className="inline-block rounded-md px-2 py-0.5 font-mono text-sm font-semibold"
+                  style={{ color, background: `rgb(var(--${job.branch}) / 0.14)` }}
+                >
+                  {job.branch}
+                </span>
+                <h3 className="display mt-4 text-[2.25rem] font-bold leading-none sm:text-[2.75rem]">
+                  <a
+                    href={job.url}
+                    target="_blank"
+                    rel="noreferrer"
+                    className="underline-offset-[6px] hover:underline"
+                    style={{ textDecorationColor: color }}
+                  >
+                    {job.company}
+                  </a>
+                </h3>
+                <p className="mt-3 font-medium">{job.role}</p>
+                <p className="mt-1 text-muted">
+                  {job.date}, {job.location}
                 </p>
-              )}
-            </VerticalTimelineElement>
-          </React.Fragment>
-        ))}
-      </VerticalTimeline>
+              </div>
+
+              {/* Bullets hang off a branch line, like commits on a lane */}
+              <ul className="relative space-y-5 pl-8">
+                <span
+                  aria-hidden
+                  className="absolute bottom-2 left-[5px] top-2 w-[3px] rounded-full"
+                  style={{ background: `rgb(var(--${job.branch}) / 0.35)` }}
+                />
+                {job.description.map((item, index) => (
+                  <li key={index} className="relative leading-relaxed text-ink/85">
+                    <span
+                      aria-hidden
+                      className="absolute -left-8 top-[0.4em] h-[13px] w-[13px] rounded-full border-[3px] bg-surface"
+                      style={{ borderColor: color }}
+                    />
+                    <RichText text={item} />
+                  </li>
+                ))}
+              </ul>
+            </li>
+          );
+        })}
+      </ol>
     </section>
   );
 }
